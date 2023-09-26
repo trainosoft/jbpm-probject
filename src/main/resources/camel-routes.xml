@@ -1,0 +1,20 @@
+<routes xmlns="http://camel.apache.org/schema/spring">    
+    <route id="processes">
+        <from uri="jbpm:events:process:test"/>
+        <filter>
+          <simple>${in.header.EventType} starts with 'before'</simple>
+          <transform>
+            <simple>${in.header.EventType} for process instance ${body.processInstance.id}</simple>
+          </transform>
+          <to uri="kafka:TestLog?brokers=localhost:9092"/>
+        </filter>
+    </route>
+    
+    <route id="tasks">
+        <from uri="jbpm:events:task:test"/>
+        <filter>
+          <simple>${in.header.EventType} starts with 'before'</simple>
+          <to uri="log:kjar.tasks?level=INFO&amp;showBody=true&amp;showHeaders=true"/>
+        </filter>
+    </route>
+</routes>
