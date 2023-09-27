@@ -102,7 +102,6 @@ public class CustomTaskEventsListener implements TaskLifeCycleEventListener {
 
     public void afterTaskAddedEvent(TaskEvent event) {
         System.out.println("afterTaskAddedEvent called....");
-        /*
         try{
             Client client = Client.create();
             AsyncWebResource webResource = client.asyncResource("http://localhost:8089/task/add");
@@ -126,11 +125,10 @@ public class CustomTaskEventsListener implements TaskLifeCycleEventListener {
 		catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
         catch(Exception ex){
             ex.printStackTrace();
         }
-        */
         System.out.println("jms message sent called....");
     }
 
