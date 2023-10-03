@@ -12,7 +12,7 @@
       <include>true</include>
       <metadata>
         <id>local</id>
-        <url>/Users/sumit/.m2/repository</url>
+        <url>C:\Users\Rutusoft/.m2/repository</url>
         <source>LOCAL</source>
       </metadata>
     </repository>

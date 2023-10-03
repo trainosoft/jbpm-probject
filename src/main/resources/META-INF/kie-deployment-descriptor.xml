@@ -9,14 +9,14 @@
     <event-listeners>
         <event-listener>
             <resolver>reflection</resolver>
-            <identifier>com.rutusoft.jbpm.listeners.CustomProcessEventsListener</identifier>
+            <identifier>com.myspace.listeners.CustomProcessEventsListener</identifier>
             <parameters/>
         </event-listener>
     </event-listeners>
     <task-event-listeners>
         <task-event-listener>
             <resolver>reflection</resolver>
-            <identifier>com.rutusoft.jbpm.listeners.CustomTaskEventsListener</identifier>
+            <identifier>com.myspace.listeners.CustomTaskEventListener</identifier>
             <parameters/>
         </task-event-listener>
     </task-event-listeners>
