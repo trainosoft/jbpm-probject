@@ -3,6 +3,9 @@ package com.myspace.listeners;
 import org.json.simple.JSONObject;
 import org.kie.api.task.TaskEvent;
 import org.kie.api.task.TaskLifeCycleEventListener;
+import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +14,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 
 public class CustomTaskEventListener implements TaskLifeCycleEventListener {
     private static final Logger logger = LoggerFactory
@@ -45,6 +49,7 @@ public class CustomTaskEventListener implements TaskLifeCycleEventListener {
     }
 
     public void beforeTaskAddedEvent(TaskEvent taskEvent) {
+
 
     }
 
@@ -89,7 +94,7 @@ public class CustomTaskEventListener implements TaskLifeCycleEventListener {
     }
 
     public void afterTaskStartedEvent(TaskEvent taskEvent) {
-
+       
     }
 
     public void afterTaskStoppedEvent(TaskEvent taskEvent) {
@@ -97,7 +102,7 @@ public class CustomTaskEventListener implements TaskLifeCycleEventListener {
     }
 
     public void afterTaskCompletedEvent(TaskEvent taskEvent) {
-
+       
     }
 
     public void afterTaskFailedEvent(TaskEvent taskEvent) {
@@ -105,14 +110,16 @@ public class CustomTaskEventListener implements TaskLifeCycleEventListener {
     }
 
     public void afterTaskAddedEvent(TaskEvent taskEvent) {
+            logger.info("after task added invoked ");
+
         JSONObject jsonObject = new JSONObject();
+            jsonObject.put("taskId", taskEvent.getTask().getId());
         jsonObject.put("inputVariables", taskEvent.getTask().getTaskData().getTaskInputVariables());
         jsonObject.put("outputVariables", taskEvent.getTask().getTaskData().getTaskOutputVariables());
         jsonObject.put("processInstanceId", taskEvent.getTask().getTaskData().getProcessInstanceId());
-        long processInstanceId = taskEvent.getTask().getTaskData().getProcessInstanceId();
         URL url = null;
         try {
-            url = new URL("http://localhost:8089/task/" + taskEvent.getTask().getId() + "/complete");
+            url = new URL("http://localhost:8089/camel/task/" + taskEvent.getTask().getId() + "/create");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestProperty("Content-Type", "application/json");
             con.setDoOutput(true);
@@ -121,16 +128,20 @@ public class CustomTaskEventListener implements TaskLifeCycleEventListener {
             OutputStream os = con.getOutputStream();
             byte[] input = jsonObject.toString().getBytes("utf-8");
             os.write(input, 0, input.length);
+                    os.flush();
+        os.close();
+                    int responseCode = con.getResponseCode();
+            logger.info("HTTP Response Code: {}", responseCode);
+        con.disconnect();
+
+
 
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
-
     public void afterTaskExitedEvent(TaskEvent taskEvent) {
 
     }
