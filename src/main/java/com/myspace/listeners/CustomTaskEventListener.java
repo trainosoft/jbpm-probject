@@ -110,16 +110,17 @@ public class CustomTaskEventListener implements TaskLifeCycleEventListener {
     }
 
     public void afterTaskAddedEvent(TaskEvent taskEvent) {
-            logger.info("after task added invoked ");
+        logger.info("after task added invoked ");
 
         JSONObject jsonObject = new JSONObject();
-            jsonObject.put("taskId", taskEvent.getTask().getId());
+
+        jsonObject.put("taskId", taskEvent.getTask().getId());
         jsonObject.put("inputVariables", taskEvent.getTask().getTaskData().getTaskInputVariables());
         jsonObject.put("outputVariables", taskEvent.getTask().getTaskData().getTaskOutputVariables());
         jsonObject.put("processInstanceId", taskEvent.getTask().getTaskData().getProcessInstanceId());
         URL url = null;
         try {
-            url = new URL("http://localhost:8089/camel/task/" + taskEvent.getTask().getId() + "/create");
+            url = new URL("http://camel:8089/camel/task/" + taskEvent.getTask().getId() + "/create");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestProperty("Content-Type", "application/json");
             con.setDoOutput(true);
@@ -128,13 +129,11 @@ public class CustomTaskEventListener implements TaskLifeCycleEventListener {
             OutputStream os = con.getOutputStream();
             byte[] input = jsonObject.toString().getBytes("utf-8");
             os.write(input, 0, input.length);
-                    os.flush();
-        os.close();
-                    int responseCode = con.getResponseCode();
+            os.flush();
+            os.close();
+            int responseCode = con.getResponseCode();
             logger.info("HTTP Response Code: {}", responseCode);
-        con.disconnect();
-
-
+            con.disconnect();
 
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
